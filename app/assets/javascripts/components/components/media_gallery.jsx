@@ -8,6 +8,68 @@ const messages = defineMessages({
   toggle_visible: { id: 'media_gallery.toggle_visible', defaultMessage: 'Toggle visibility' }
 });
 
+const outerStyle = {
+  marginTop: '8px',
+  overflow: 'hidden',
+  width: '100%',
+  boxSizing: 'border-box',
+  position: 'relative'
+};
+
+const spoilerStyle = {
+  textAlign: 'center',
+  height: '100%',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column'
+};
+
+const spoilerSpanStyle = {
+  display: 'block',
+  fontSize: '14px',
+};
+
+const spoilerSubSpanStyle = {
+  display: 'block',
+  fontSize: '11px',
+  fontWeight: '500'
+};
+
+const spoilerButtonStyle = {
+  position: 'absolute',
+  top: '4px',
+  left: '4px',
+  zIndex: '100'
+};
+
+const itemStyle = {
+  boxSizing: 'border-box',
+  position: 'relative',
+  float: 'left',
+  border: 'none',
+  display: 'block'
+};
+
+const thumbStyle = {
+  display: 'block',
+  width: '100%',
+  height: '100%',
+  textDecoration: 'none',
+  backgroundSize: 'cover',
+  cursor: 'zoom-in'
+};
+
+const gifvThumbStyle = {
+  position: 'relative',
+  zIndex: '1',
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  cursor: 'zoom-in'
+};
+
 class Item extends React.PureComponent {
   constructor (props, context) {
     super(props, context);
@@ -26,7 +88,7 @@ class Item extends React.PureComponent {
   }
 
   render () {
-    const { attachment, index, size } = this.props;
+    const { attachment, index, size, squareMedia, expandMedia } = this.props;
 
     let width  = 50;
     let height = 100;
@@ -35,60 +97,74 @@ class Item extends React.PureComponent {
     let bottom = 'auto';
     let right  = 'auto';
 
-    if (size === 1) {
+    if (size === 1 || expandMedia) {
       width = 100;
     }
 
-    if (size === 4 || (size === 3 && index > 0)) {
-      height = 50;
-    }
-
-    if (size === 2) {
-      if (index === 0) {
-        right = '2px';
-      } else {
-        left = '2px';
-      }
-    } else if (size === 3) {
-      if (index === 0) {
-        right = '2px';
-      } else if (index > 0) {
-        left = '2px';
+    if (!expandMedia) {
+      if (size === 4 || (size === 3 && index > 0)) {
+        height = 50;
       }
 
-      if (index === 1) {
-        bottom = '2px';
-      } else if (index > 1) {
-        top = '2px';
-      }
-    } else if (size === 4) {
-      if (index === 0 || index === 2) {
-        right = '2px';
-      }
+      if (size === 2) {
+        if (index === 0) {
+          right = '2px';
+        } else {
+          left = '2px';
+        }
+      } else if (size === 3) {
+        if (index === 0) {
+          right = '2px';
+        } else if (index > 0) {
+          left = '2px';
+        }
 
-      if (index === 1 || index === 3) {
-        left = '2px';
-      }
+        if (index === 1) {
+          bottom = '2px';
+        } else if (index > 1) {
+          top = '2px';
+        }
+      } else if (size === 4) {
+        if (index === 0 || index === 2) {
+          right = '2px';
+        }
 
-      if (index < 2) {
-        bottom = '2px';
-      } else {
-        top = '2px';
+        if (index === 1 || index === 3) {
+          left = '2px';
+        }
+
+        if (index < 2) {
+          bottom = '2px';
+        } else {
+          top = '2px';
+        }
       }
     }
 
     let thumbnail = '';
 
     if (attachment.get('type') === 'image') {
-      thumbnail = (
-        <a
-          className='media-gallery__item-thumbnail'
-          href={attachment.get('remote_url') || attachment.get('url')}
-          onClick={this.handleClick}
-          target='_blank'
-          style={{ backgroundImage: `url(${attachment.get('preview_url')})` }}
-        />
-      );
+      if (expandMedia) {
+        thumbnail = (
+          <a
+            href={attachment.get('remote_url') || attachment.get('url')}
+            onClick={this.handleClick}
+            target='_blank'
+          >
+            <img src={attachment.get('preview_url')} alt='media' style={{ width: '100%' }} />
+          </a>
+        );
+      } else {
+        thumbnail = (
+          <a
+            className='media-gallery__item-thumbnail'
+            href={attachment.get('remote_url') || attachment.get('url')}
+            onClick={this.handleClick}
+            target='_blank'
+            style={{ background: `url(${attachment.get('preview_url')}) no-repeat 50% ${squareMedia ? '0' : '20%'}` }}
+          />
+        );
+      }
     } else if (attachment.get('type') === 'gifv') {
       const autoPlay = !isIOS() && this.props.autoPlayGif;
 
@@ -123,7 +199,9 @@ Item.propTypes = {
   index: PropTypes.number.isRequired,
   size: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
-  autoPlayGif: PropTypes.bool.isRequired
+  autoPlayGif: PropTypes.bool.isRequired,
+  expandMedia: PropTypes.bool.isRequired,
+  squareMedia: PropTypes.bool.isRequired
 };
 
 class MediaGallery extends React.PureComponent {
@@ -146,7 +224,7 @@ class MediaGallery extends React.PureComponent {
   }
 
   render () {
-    const { media, intl, sensitive } = this.props;
+    const { media, intl, sensitive, squareMedia, expandMedia } = this.props;
 
     let children;
 
@@ -167,11 +245,13 @@ class MediaGallery extends React.PureComponent {
       );
     } else {
       const size = media.take(4).size;
-      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} autoPlayGif={this.props.autoPlayGif} index={i} size={size} />);
+      children = media.take(4).map((attachment, i) =>
+        <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} autoPlayGif={this.props.autoPlayGif} index={i} size={size} squareMedia={squareMedia} expandMedia={expandMedia} />
+      );
     }
 
     return (
-      <div className='media-gallery' style={{ height: `${this.props.height}px` }}>
+      <div className='media-gallery' style={{ height: (expandMedia && this.state.visible) ? 'auto' : `${this.props.height}px` }}>
         <div className='spoiler-button' style={{ display: !this.state.visible ? 'none' : 'block' }}>
           <IconButton title={intl.formatMessage(messages.toggle_visible)} icon={this.state.visible ? 'eye' : 'eye-slash'} overlay onClick={this.handleOpen} />
         </div>
@@ -189,7 +269,15 @@ MediaGallery.propTypes = {
   height: PropTypes.number.isRequired,
   onOpenMedia: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
-  autoPlayGif: PropTypes.bool.isRequired
+  autoPlayGif: PropTypes.bool.isRequired,
+  expandMedia: PropTypes.bool.isRequired,
+  squareMedia: PropTypes.bool.isRequired
 };
+
+MediaGallery.defaultProps = {
+  expandMedia: false,
+  squareMedia: false
+};
+
 
 export default injectIntl(MediaGallery);

@@ -60,7 +60,7 @@ class StatusList extends React.PureComponent {
   }
 
   render () {
-    const { statusIds, onScrollToBottom, scrollKey, shouldUpdateScroll, isLoading, isUnread, hasMore, prepend, emptyMessage } = this.props;
+    const { statusIds, onScrollToBottom, scrollKey, shouldUpdateScroll, isLoading, isUnread, hasMore, prepend, emptyMessage, squareMedia, expandMedia, standalone } = this.props;
 
     let loadMore       = '';
     let scrollableArea = '';
@@ -83,7 +83,7 @@ class StatusList extends React.PureComponent {
             {prepend}
 
             {statusIds.map((statusId) => {
-              return <StatusContainer key={statusId} id={statusId} />;
+              return <StatusContainer key={statusId} scrollKey={scrollKey} id={statusId} squareMedia={squareMedia} expandMedia={expandMedia} standalone={standalone} />;
             })}
 
             {loadMore}
@@ -118,11 +118,16 @@ StatusList.propTypes = {
   isUnread: PropTypes.bool,
   hasMore: PropTypes.bool,
   prepend: PropTypes.node,
-  emptyMessage: PropTypes.node
+  emptyMessage: PropTypes.node,
+  expandMedia: PropTypes.bool,
+  squareMedia: PropTypes.bool,
+  standalone: PropTypes.bool,
 };
 
 StatusList.defaultProps = {
-  trackScroll: true
+  expandMedia: false,
+  squareMedia: false,
+  standalone: false
 };
 
 export default StatusList;
