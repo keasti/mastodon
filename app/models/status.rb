@@ -20,6 +20,7 @@ class Status < ApplicationRecord
   has_many :replies, foreign_key: 'in_reply_to_id', class_name: 'Status', inverse_of: :thread
   has_many :mentions, dependent: :destroy
   has_many :media_attachments, dependent: :destroy
+  has_many :pixiv_cards, dependent: :destroy
   has_and_belongs_to_many :tags
 
   has_one :notification, as: :activity, dependent: :destroy
@@ -44,7 +45,7 @@ class Status < ApplicationRecord
   scope :including_silenced_accounts, -> { left_outer_joins(:account).where(accounts: { silenced: true }) }
   scope :not_excluded_by_account, ->(account) { where.not(account_id: account.excluded_from_timeline_account_ids) }
 
-  cache_associated :account, :application, :media_attachments, :tags, :stream_entry, mentions: :account, reblog: [:account, :application, :stream_entry, :tags, :media_attachments, mentions: :account], thread: :account
+  cache_associated :account, :application, :media_attachments, :tags, :stream_entry, :pixiv_cards, mentions: :account, reblog: [:account, :application, :stream_entry, :tags, :media_attachments, :pixiv_cards, mentions: :account], thread: :account
 
   def reply?
     !in_reply_to_id.nil? || super

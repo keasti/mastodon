@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425202925) do
+ActiveRecord::Schema.define(version: 20170427111847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.index ["account_id", "target_account_id"], name: "index_follows_on_account_id_and_target_account_id", unique: true, using: :btree
+    t.index ["target_account_id"], name: "index_follows_on_target_account_id", using: :btree
   end
 
   create_table "imports", force: :cascade do |t|
@@ -108,6 +109,11 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.datetime "data_updated_at"
   end
 
+  create_table "initial_password_usages", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_initial_password_usages_on_user_id", unique: true, using: :btree
+  end
+
   create_table "media_attachments", force: :cascade do |t|
     t.bigint   "status_id"
     t.string   "file_file_name"
@@ -120,7 +126,6 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.datetime "updated_at",                     null: false
     t.string   "shortcode"
     t.integer  "type",              default: 0,  null: false
-    t.json     "file_meta"
     t.index ["shortcode"], name: "index_media_attachments_on_shortcode", unique: true, using: :btree
     t.index ["status_id"], name: "index_media_attachments_on_status_id", using: :btree
   end
@@ -132,6 +137,7 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.datetime "updated_at", null: false
     t.index ["account_id", "status_id"], name: "index_mentions_on_account_id_and_status_id", unique: true, using: :btree
     t.index ["status_id"], name: "index_mentions_on_status_id", using: :btree
+    t.index ["status_id"], name: "mentions_status_id_index", using: :btree
   end
 
   create_table "mutes", force: :cascade do |t|
@@ -192,6 +198,23 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
   end
 
+  create_table "oauth_authentications", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "provider",   null: false
+    t.string   "uid",        null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_oauth_authentications_on_provider_and_uid", unique: true, using: :btree
+    t.index ["user_id", "provider"], name: "index_oauth_authentications_on_user_id_and_provider", unique: true, using: :btree
+  end
+
+  create_table "pixiv_cards", force: :cascade do |t|
+    t.integer "status_id", null: false
+    t.string  "url",       null: false
+    t.string  "image_url"
+    t.index ["status_id"], name: "index_pixiv_cards_on_status_id", using: :btree
+  end
+
   create_table "preview_cards", force: :cascade do |t|
     t.bigint   "status_id"
     t.string   "url",                default: "", null: false
@@ -203,14 +226,6 @@ ActiveRecord::Schema.define(version: 20170425202925) do
     t.datetime "image_updated_at"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.integer  "type",               default: 0,  null: false
-    t.text     "html",               default: "", null: false
-    t.string   "author_name",        default: "", null: false
-    t.string   "author_url",         default: "", null: false
-    t.string   "provider_name",      default: "", null: false
-    t.string   "provider_url",       default: "", null: false
-    t.integer  "width",              default: 0,  null: false
-    t.integer  "height",             default: 0,  null: false
     t.index ["status_id"], name: "index_preview_cards_on_status_id", unique: true, using: :btree
   end
 
