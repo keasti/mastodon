@@ -30,11 +30,14 @@ class PostStatusService < BaseService
                                         language: detect_language_for(text, account),
                                         application: options[:application])
       attach_media(status, media)
+      attach_pixiv_cards(status)
     end
+
     process_mentions_service.call(status)
     process_hashtags_service.call(status)
 
-    LinkCrawlWorker.perform_async(status.id) unless status.spoiler_text.present?
+    PixivCardUpdateWorker.perform_async(status.id) if status.pixiv_cards.any?
+    LinkCrawlWorker.perform_async(status.id)
     DistributionWorker.perform_async(status.id)
     Pubsubhubbub::DistributionWorker.perform_async(status.stream_entry.id)
 
@@ -57,6 +60,21 @@ class PostStatusService < BaseService
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.images_and_video') if media.size > 1 && media.find(&:video?)
 
     media
+  end
+
+  def attach_pixiv_cards(status)
+    pixiv_urls = URI.extract(status.text).select do |url|
+      PixivUrl.valid_pixiv_url?(url)
+    end
+
+    pixiv_urls.each do |url|
+      image_url = PixivUrl::PixivTwitterImage.cache_or_fetch(url) if PixivUrl::PixivTwitterImage.cache_exists?(url)
+
+      status.pixiv_cards.create!(
+        url: url,
+        image_url: image_url
+      )
+    end
   end
 
   def attach_media(status, media)
