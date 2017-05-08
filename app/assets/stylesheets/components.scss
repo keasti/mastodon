@@ -745,19 +745,21 @@ a.status__content__spoiler-link {
   line-height: 18px;
 }
 
-.account__action-bar__tab {
+.account__action-bar__tab{
   text-decoration: none;
   overflow: hidden;
-  width: 80px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   border-left: 1px solid lighten($color1, 8%);
   padding: 10px 5px;
 
   & > span {
     display: block;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 10px;
     color: $color3;
-  }
+}
 
   strong {
     display: block;
