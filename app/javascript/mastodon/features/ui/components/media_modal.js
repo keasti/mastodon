@@ -62,6 +62,7 @@ class MediaModal extends ImmutablePureComponent {
     const index = this.getIndex();
     const attachment = media.get(index);
     const url = attachment.get('url');
+    const r_url = attachment.get('remote_url');
 
     let leftNav, rightNav, content;
 
@@ -74,6 +75,8 @@ class MediaModal extends ImmutablePureComponent {
 
     if (attachment.get('type') === 'image') {
       content = <ImageLoader src={url} imgProps={{ style: { display: 'block' } }} />;
+    } else if (attachment.get('type') === 'unknown') {
+      content = <ImageLoader src={r_url} imgProps={{ style: { display: 'block' } }} />;
     } else if (attachment.get('type') === 'gifv') {
       content = <ExtendedVideoPlayer src={url} muted={true} controls={false} />;
     }
