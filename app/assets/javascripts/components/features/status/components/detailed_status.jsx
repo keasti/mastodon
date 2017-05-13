@@ -33,7 +33,7 @@ class DetailedStatus extends React.PureComponent {
     let applicationLink = '';
 
     if (status.get('media_attachments').size > 0) {
-      if (status.get('media_attachments').some(item => item.get('type') === 'unknown')) {
+      if (status.get('media_attachments').some(item => item.get('type') === 'disabled_this_decision')) {
         media = <AttachmentList media={status.get('media_attachments')} />;
       } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
         media = <VideoPlayer sensitive={status.get('sensitive')} media={status.getIn(['media_attachments', 0])} width={300} height={150} onOpenVideo={this.props.onOpenVideo} autoplay />;
