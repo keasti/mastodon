@@ -838,7 +838,7 @@
   position: relative;
 
   & > div {
-    background: rgba(lighten($ui-base-color, 4%), 0.9);
+    background: rgba(lighten($ui-base-color, 4%), 0.5);
     padding: 20px 10px;
   }
 
@@ -3344,7 +3344,7 @@ button.icon-button.active i.fa-retweet {
 }
 
 .media-gallery__item-thumbnail {
-  background-position: center;
+  background-position: 50% 20%;
   background-repeat: no-repeat;
   background-size: cover;
   cursor: zoom-in;
