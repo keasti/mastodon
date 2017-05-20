@@ -20,7 +20,7 @@ class MediaItem extends ImmutablePureComponent {
     }
 
     if (!status.get('sensitive')) {
-      if (!media.get('type') === 'unknown') {
+      if (media.get('type') === 'image' || media.get('type') === 'gifv') {
         style = { backgroundImage: `url(${media.get('preview_url')})` };
       }
       else {
