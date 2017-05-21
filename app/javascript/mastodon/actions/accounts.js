@@ -128,7 +128,7 @@ export function fetchAccountMediaTimeline(id, replace = false) {
     const ids      = getState().getIn(['timelines', 'accounts_media_timelines', id, 'items'], Immutable.List());
     const newestId = ids.size > 0 ? ids.first() : null;
 
-    let params = { only_media: 'true', limit: 12 };
+    let params = { only_media: 'true', limit: 36 };
     let skipLoading = false;
 
     if (newestId !== null && !replace) {
