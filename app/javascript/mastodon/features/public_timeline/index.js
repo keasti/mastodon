@@ -14,6 +14,7 @@ import {
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnBackButtonSlim from '../../components/column_back_button_slim';
+import ColumnSettingsContainer from './containers/column_settings_container';
 import createStream from '../../stream';
 
 const messages = defineMessages({
@@ -120,11 +121,14 @@ class PublicTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-        />
+        >
+          <ColumnSettingsContainer />
+        </ColumnHeader>
 
         <StatusListContainer
           {...this.props}
           type='public'
+          trackScroll={!pinned}
           scrollKey={`public_timeline-${columnId}`}
           emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other instances to fill it up' />}
         />
