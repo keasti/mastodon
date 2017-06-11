@@ -174,7 +174,7 @@ class Status extends ImmutablePureComponent {
     }
 
     if (status.get('media_attachments').size > 0 && !this.props.muted) {
-      if (status.get('media_attachments').some(item => item.get('type') === 'unknown')) {
+      if (status.get('media_attachments').some(item => item.get('type') === 'disabled_this_decision')) {
 
       } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
         media = <VideoPlayer media={status.getIn(['media_attachments', 0])} sensitive={status.get('sensitive')} onOpenVideo={this.props.onOpenVideo} />;

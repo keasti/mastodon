@@ -6,8 +6,8 @@ class ImageLoader extends React.PureComponent {
   static propTypes = {
     src: PropTypes.string.isRequired,
     previewSrc: PropTypes.string.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    width: PropTypes.string.isRequired,
+    height: PropTypes.string.isRequired,
   }
 
   state = {
