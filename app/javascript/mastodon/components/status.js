@@ -88,6 +88,16 @@ class Status extends ImmutablePureComponent {
     );
   }
 
+  componentWillUnmount () {
+    if (!this.props.intersectionObserverWrapper) {
+      // TODO: enable IntersectionObserver optimization for notification statuses.
+      // These are managed in notifications/index.js rather than status_list.js
+      return;
+    }
+
+    this.props.intersectionObserverWrapper.unobserve(this.props.id, this.node);
+  }
+
   handleIntersection = (entry) => {
     // Edge 15 doesn't support isIntersecting, but we can infer it
     // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12156111/
@@ -144,7 +154,10 @@ class Status extends ImmutablePureComponent {
   render () {
     let media = null;
     let statusAvatar;
-    const { status, account, ...other } = this.props;
+
+    // Exclude intersectionObserverWrapper from `other` variable
+    // because intersection is managed in here.
+    const { status, account, intersectionObserverWrapper, ...other } = this.props;
     const { isExpanded, isIntersecting, isHidden } = this.state;
 
     if (status === null) {
