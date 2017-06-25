@@ -133,7 +133,8 @@ class Item extends React.PureComponent {
 
 }
 
-class MediaGallery extends React.PureComponent {
+@injectIntl
+export default class MediaGallery extends React.PureComponent {
 
   static propTypes = {
     sensitive: PropTypes.bool,
@@ -193,5 +194,3 @@ class MediaGallery extends React.PureComponent {
   }
 
 }
-
-export default injectIntl(MediaGallery);
