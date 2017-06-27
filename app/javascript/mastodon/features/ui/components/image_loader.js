@@ -8,8 +8,8 @@ export default class ImageLoader extends React.PureComponent {
     alt: PropTypes.string,
     src: PropTypes.string.isRequired,
     previewSrc: PropTypes.string.isRequired,
-    width: PropTypes.string.isRequired,
-    height: PropTypes.string.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
   }
 
   static defaultProps = {
