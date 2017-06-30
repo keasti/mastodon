@@ -105,14 +105,17 @@ class Item extends React.PureComponent {
         </a>
       );
     } else if (attachment.get('type') === 'unknown') {
+      const sizes = `(min-width: 1025px) ${320 * (width / 100)}px, ${width}vw`;
+
       thumbnail = (
         <a
           className='media-gallery__item-thumbnail'
           href={attachment.get('remote_url') || attachment.get('url')}
           onClick={this.handleClick}
           target='_blank'
-          style={{ backgroundImage: `url(${attachment.get('remote_url')})` }}
-        />
+        >
+          <img src={attachment.get('remote_url')} sizes={sizes} alt='' />  
+        </a>
       );
     } else if (attachment.get('type') === 'gifv') {
       const autoPlay = !isIOS() && this.props.autoPlayGif;
