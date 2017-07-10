@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactSwipeable from 'react-swipeable';
+import ReactSwipeableViews from 'react-swipeable-views';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import ExtendedVideoPlayer from '../../../components/extended_video_player';
@@ -25,6 +25,10 @@ export default class MediaModal extends ImmutablePureComponent {
   state = {
     index: null,
   };
+
+  handleSwipe = (index) => {
+    this.setState({ index: (index) % this.props.media.size });
+  }
 
   handleNextClick = () => {
     this.setState({ index: (this.getIndex() + 1) % this.props.media.size });
@@ -75,13 +79,17 @@ export default class MediaModal extends ImmutablePureComponent {
     }
 
     if (attachment.get('type') === 'image') {
-      content = <ImageLoader previewSrc={attachment.get('preview_url')} src={url} width={attachment.getIn(['meta', 'original', 'width'])} height={attachment.getIn(['meta', 'original', 'height'])} />;
+      content = media.map((image) => {
+        const width  = image.getIn(['meta', 'original', 'width']) || null;
+        const height = image.getIn(['meta', 'original', 'height']) || null;
+
+        return <ImageLoader previewSrc={image.get('preview_url')} src={image.get('url')} width={width} height={height} key={image.get('preview_url')} />;
+      }).toArray();
     } else if (attachment.get('type') === 'unknown') {
-      r_image = new Image();
-      r_image.src = r_url;
-      r_width = r_image.naturalWidth;
-      r_height = r_image.naturalHeight;
-      content = <ImageLoader previewSrc={r_url} src={r_url} width={r_width} height={r_height} />;
+      content = <ImageLoader previewSrc={r_url} src={r_url} />;
+      content = media.map((image) => {
+        return <ImageLoader previewSrc={image.get('remote_url')} src={image.get('remote_url')} key={image.get('remote_url')} />;
+      }).toArray();
     } else if (attachment.get('type') === 'gifv') {
       content = <ExtendedVideoPlayer src={url} muted controls={false} />;
     }
@@ -92,9 +100,9 @@ export default class MediaModal extends ImmutablePureComponent {
 
         <div className='media-modal__content'>
           <IconButton className='media-modal__close' title={intl.formatMessage(messages.close)} icon='times' onClick={onClose} size={16} />
-          <ReactSwipeable onSwipedRight={this.handlePrevClick} onSwipedLeft={this.handleNextClick}>
+          <ReactSwipeableViews onChangeIndex={this.handleSwipe} index={index}>
             {content}
-          </ReactSwipeable>
+          </ReactSwipeableViews>
         </div>
 
         {rightNav}
