@@ -67,9 +67,8 @@ export default class MediaModal extends ImmutablePureComponent {
     const index = this.getIndex();
     const attachment = media.get(index);
     const url = attachment.get('url');
-    const r_url = attachment.get('remote_url');
 
-    let leftNav, rightNav, content, r_image, r_width, r_height;
+    let leftNav, rightNav, content, r_image;
 
     leftNav = rightNav = content = '';
 
@@ -87,7 +86,11 @@ export default class MediaModal extends ImmutablePureComponent {
       }).toArray();
     } else if (attachment.get('type') === 'unknown') {
       content = media.map((image) => {
-        return <ImageLoader previewSrc={image.get('remote_url')} src={image.get('remote_url')} key={image.get('remote_url')} />;
+        r_image = new Image();
+        r_image.src = image.get('remote_url');
+        const width  = r_image.naturalWidth;
+        const height = r_image.naturalHeight;
+        return <ImageLoader previewSrc={image.get('remote_url')} src={image.get('remote_url')} width={width} height={height} key={image.get('remote_url')} />;
       }).toArray();
     } else if (attachment.get('type') === 'gifv') {
       content = <ExtendedVideoPlayer src={url} muted controls={false} />;
