@@ -1,7 +1,7 @@
 ---
 ja:
   about:
-    about_mastodon_html: Mastodon は、オープンなウェブプロトコルを採用した、自由でオープンソースなソーシャルネットワークです。電子メールのように分散型の仕組みを採っています。
+    about_mastodon_html: Mastodon は、オープンなウェブプロトコルを採用した、自由でオープンソースなソーシャルネットワークです。電子メールのような分散型の仕組みを採っています。
     about_this: このインスタンスについて
     business_email: 'ビジネスメールアドレス:'
     closed_registrations: 現在このインスタンスでの新規登録は受け付けていません。しかし、他のインスタンスにアカウントを作成しても全く同じネットワークに参加することができます。
@@ -10,13 +10,13 @@ ja:
     domain_count_after: 個のインスタンス
     domain_count_before: 接続中
     features:
-      humane_approach_body: 他のSNSたちの失敗から学び、Mastodon はソーシャルメディアが誤った使い方をされることの無いよう、倫理的な設計を目指しています。
-      humane_approach_title: より人道的な設計
-      not_a_product_body: Mastodon は営利的なSNSではありません。広告も、データ収集も無く、また塀に囲まれた庭でもありません。
-      not_a_product_title: あなたは個人であり、商品ではありません
-      real_conversation_body: 自分の考えを好きなように表現できる500文字までの投稿と、文章やメディアの内容について警告をつけることができます。
+      humane_approach_body: 他の SNS の失敗から学び、Mastodon はソーシャルメディアが誤った使い方をされることの無いように倫理的な設計を目指しています。
+      humane_approach_title: より思いやりのある設計
+      not_a_product_body: Mastodon は営利的な SNS ではありません。広告や、データの収集・解析は無く、またユーザーの囲い込みもありません。
+      not_a_product_title: あなたは人間であり、商品ではありません
+      real_conversation_body: 好きなように書ける500文字までの投稿や、文章やメディアの内容に警告をつけられる機能で、思い通りに自分自身を表現することができます。
       real_conversation_title: 本当のコミュニケーションのために
-      within_reach_body: デベロッパーフレンドリーな API により実現された、iOS や Android, その他様々なプラットフォームのためのアプリでどこでも友人とやりとりできます。
+      within_reach_body: デベロッパーフレンドリーな API により実現された、iOS や Android、その他様々なプラットフォームのためのアプリでどこでも友人とやりとりできます。
       within_reach_title: いつでも身近に
     find_another_instance: 他のインスタンスを探す
     generic_description: "%{domain} は、Mastodon インスタンスの一つです。"
