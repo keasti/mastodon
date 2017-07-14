@@ -65,8 +65,6 @@ export default class MediaModal extends ImmutablePureComponent {
     const { media, intl, onClose } = this.props;
 
     const index = this.getIndex();
-    const attachment = media.get(index);
-    const url = attachment.get('url');
 
     let leftNav, rightNav, content, r_image;
 
@@ -77,24 +75,22 @@ export default class MediaModal extends ImmutablePureComponent {
       rightNav = <div role='button' tabIndex='0' className='modal-container__nav  modal-container__nav--right' onClick={this.handleNextClick}><i className='fa fa-fw fa-chevron-right' /></div>;
     }
 
-    if (attachment.get('type') === 'image') {
-      content = media.map((image) => {
-        const width  = image.getIn(['meta', 'original', 'width']) || null;
-        const height = image.getIn(['meta', 'original', 'height']) || null;
+    content = media.map((image) => {
+      const width  = image.getIn(['meta', 'original', 'width']) || null;
+      const height = image.getIn(['meta', 'original', 'height']) || null;
 
+      if (image.get('type') === 'image') {
         return <ImageLoader previewSrc={image.get('preview_url')} src={image.get('url')} width={width} height={height} key={image.get('preview_url')} />;
-      }).toArray();
-    } else if (attachment.get('type') === 'unknown') {
-      content = media.map((image) => {
+      } else if (image.get('type') === 'unknown') {
         r_image = new Image();
         r_image.src = image.get('remote_url');
-        const width  = r_image.naturalWidth;
-        const height = r_image.naturalHeight;
-        return <ImageLoader previewSrc={image.get('remote_url')} src={image.get('remote_url')} width={width} height={height} key={image.get('remote_url')} />;
-      }).toArray();
-    } else if (attachment.get('type') === 'gifv') {
-      content = <ExtendedVideoPlayer src={url} muted controls={false} />;
-    }
+        return <ImageLoader previewSrc={image.get('remote_url')} src={image.get('remote_url')} width={r_image.naturalWidth} height={r_image.naturalHeight} key={image.get('remote_url')} />;
+      } else if (image.get('type') === 'gifv') {
+        return <ExtendedVideoPlayer src={image.get('url')} muted controls={false} width={width} height={height} key={image.get('preview_url')} />;
+      }
+
+      return null;
+    }).toArray();
 
     return (
       <div className='modal-root__modal media-modal'>
