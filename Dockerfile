@@ -50,6 +50,6 @@ COPY docker_entrypoint.sh /usr/local/bin/run
 
 RUN chmod +x /usr/local/bin/run
 
-VOLUME /mastodon/public/system /mastodon/public/assets /mastodon/public/packs
+VOLUME /mastodon/public/system /mastodon/public/assets /mastodon/public/packs /mastodon/public/sw.js
 
 ENTRYPOINT ["/usr/local/bin/run"]
