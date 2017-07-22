@@ -11,6 +11,7 @@ import SearchContainer from './containers/search_container';
 import Motion from 'react-motion/lib/Motion';
 import spring from 'react-motion/lib/spring';
 import SearchResultsContainer from './containers/search_results_container';
+import { changeComposing } from '../../actions/compose';
 import Announcements from './components/announcements';
 
 const messages = defineMessages({
@@ -48,6 +49,14 @@ export default class Compose extends React.PureComponent {
     this.props.dispatch(unmountCompose());
   }
 
+  onFocus = () => {
+    this.props.dispatch(changeComposing(true));
+  }
+
+  onBlur = () => {
+    this.props.dispatch(changeComposing(false));
+  }
+
   render () {
     const { multiColumn, showSearch, intl } = this.props;
 
@@ -83,8 +92,8 @@ export default class Compose extends React.PureComponent {
         <SearchContainer />
 
         <div className='drawer__pager'>
-          <div className='drawer__inner'>
-            <NavigationContainer />
+          <div className='drawer__inner' onFocus={this.onFocus}>
+            <NavigationContainer onClose={this.onBlur} />
             <ComposeFormContainer />
             <Announcements />
           </div>
