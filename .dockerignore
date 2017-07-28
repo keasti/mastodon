@@ -5,7 +5,6 @@ public/assets
 public/packs
 public/sw.js
 node_modules
-storybook
 neo4j
 vendor/bundle
 .DS_Store
