@@ -30,7 +30,6 @@ services:
       - ./public/assets:/mastodon/public/assets
       - ./public/packs:/mastodon/public/packs
       - ./public/system:/mastodon/public/system
-      - ./public/sw.js:/mastodon/public/sw.js
 
   streaming:
     build: .
