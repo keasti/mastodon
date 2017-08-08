@@ -17,6 +17,9 @@
 
 .landing-page
   .header-wrapper
+    .mascot-container
+      = image_tag asset_pack_path('elephant-fren.png'), alt: '', role: 'presentation', class: 'mascot'
+
     .header
       .container.links
         .brand
@@ -40,7 +43,6 @@
           %div{ role: 'presentation', class: 'float-1' }
           %div{ role: 'presentation', class: 'float-2' }
           %div{ role: 'presentation', class: 'float-3' }
-          = image_tag asset_pack_path('elephant-fren.png'), alt: '', role: 'presentation', class: 'mascot'
 
         .heading
           %h1
@@ -68,10 +70,10 @@
         %a.button.button-secondary{ href: 'https://joinmastodon.org/' }= t 'about.learn_more'
         = render 'features'
 
-  .learn-more-cta
-    .container
-      %h3= t('about.description_headline', domain: site_hostname)
-      %p= @instance_presenter.site_description.html_safe.presence || t('about.generic_description', domain: site_hostname)
+    .about-short
+      .container
+        %h3= t('about.description_headline', domain: site_hostname)
+        %p= @instance_presenter.site_description.html_safe.presence || t('about.generic_description', domain: site_hostname)
 
 
   .footer-links
