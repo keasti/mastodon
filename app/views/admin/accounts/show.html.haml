@@ -32,18 +32,30 @@
         %th= t('admin.accounts.profile_url')
         %td= link_to @account.url, @account.url
       %tr
-        %th= t('admin.accounts.feed_url')
-        %td= link_to @account.remote_url, @account.remote_url
-      %tr
-        %th= t('admin.accounts.push_subscription_expires')
-        %td
-          - if @account.subscribed?
-            = l @account.subscription_expires_at
-          - else
-            = t('admin.accounts.not_subscribed')
-      %tr
-        %th= t('admin.accounts.salmon_url')
-        %td= link_to @account.salmon_url, @account.salmon_url
+        %th= t('admin.accounts.protocol')
+        %td= protocol_for_display(@account.protocol)
+
+      - if @account.ostatus?
+        %tr
+          %th= t('admin.accounts.feed_url')
+          %td= link_to @account.remote_url, @account.remote_url
+        %tr
+          %th= t('admin.accounts.push_subscription_expires')
+          %td
+            - if @account.subscribed?
+              = l @account.subscription_expires_at
+            - else
+              = t('admin.accounts.not_subscribed')
+        %tr
+          %th= t('admin.accounts.salmon_url')
+          %td= link_to @account.salmon_url, @account.salmon_url
+      - elsif @account.activitypub?
+        %tr
+          %th= t('admin.accounts.inbox_url')
+          %td= link_to @account.inbox_url, @account.inbox_url
+        %tr
+          %th= t('admin.accounts.outbox_url')
+          %td= link_to @account.outbox_url, @account.outbox_url
 
     %tr
       %th= t('admin.accounts.follows')
