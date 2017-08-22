@@ -43,7 +43,6 @@
           %div{ role: 'presentation', class: 'float-1' }
           %div{ role: 'presentation', class: 'float-2' }
           %div{ role: 'presentation', class: 'float-3' }
-
         .heading
           %h1
             = @instance_presenter.site_title
@@ -59,6 +58,11 @@
                 = @instance_presenter.closed_registrations_message.html_safe
             = link_to t('about.find_another_instance'), 'https://joinmastodon.org/', class: 'button button-alternative button--block'
 
+  .about-short
+    .container
+      %h3= t('about.description_headline', domain: site_hostname)
+      %p= @instance_presenter.site_description.html_safe.presence || t('about.generic_description', domain: site_hostname)
+
   .features
     .container
       - if Setting.timeline_preview
@@ -69,15 +73,8 @@
         %p= t 'about.about_mastodon_html'
         %a.button.button-secondary{ href: 'https://joinmastodon.org/' }= t 'about.learn_more'
         = render 'features'
-
-    .about-short
-      .container
-        %h3= t('about.description_headline', domain: site_hostname)
-        %p= @instance_presenter.site_description.html_safe.presence || t('about.generic_description', domain: site_hostname)
-
-
   .footer-links
     .container
       %p
-        = link_to t('about.source_code'), 'https://github.com/lindwurm/mastodon'
+        = link_to t('about.source_code'), @instance_presenter.source_url
         = " (#{@instance_presenter.version_number})"
