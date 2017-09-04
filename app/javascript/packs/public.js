@@ -90,14 +90,14 @@ function main() {
   delegate(document, '.account_display_name', 'input', ({ target }) => {
     const nameCounter = document.querySelector('.name-counter');
     if (nameCounter) {
-      nameCounter.textContent = 30 - length(target.value);
+      nameCounter.textContent = 32 - length(target.value);
     }
   });
 
   delegate(document, '.account_note', 'input', ({ target }) => {
     const noteCounter = document.querySelector('.note-counter');
     if (noteCounter) {
-      noteCounter.textContent = 160 - length(target.value);
+      noteCounter.textContent = 256 - length(target.value);
     }
   });
 
