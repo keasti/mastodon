@@ -1,6 +1,25 @@
 version: '3'
 services:
 
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: mstdn-nginx
+    ports:
+      - "9090:9090"
+    restart: always
+    tty: false
+    env_file: ./settings/nginx/.env.nginx
+    volumes:
+      - ./settings/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./settings/nginx/conf:/etc/nginx/conf:ro
+      - ../../proxy/certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - ./public:/mastodon/public
+    networks:
+      - front
+      - back
+
   db:
     restart: always
     image: postgres:9.6-alpine
@@ -40,7 +59,7 @@ services:
     env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
     networks:
-      - external_network
+      - back
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:3000/health || exit 1"]
@@ -60,7 +79,7 @@ services:
     env_file: .env.production
     command: node ./streaming
     networks:
-      - external_network
+      - back
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1"]
@@ -80,7 +99,7 @@ services:
       - db
       - redis
     networks:
-      - external_network
+      - back
       - internal_network
     volumes:
       - ./public/system:/mastodon/public/system
@@ -102,6 +121,8 @@ services:
 #      - internal_network
 
 networks:
-  external_network:
+  front:
+    external: true
+  back:
   internal_network:
     internal: true
